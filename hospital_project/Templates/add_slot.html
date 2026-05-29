@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Slot | Hospital Appointment System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef4ff, #f8fbff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .message {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #bbf7d0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Add Available Slot</h1>
+        <p class="subtitle">
+            Add your available consultation date and time. Patients will be able to book these slots.
+        </p>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="date">Appointment Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="start_time">Start Time</label>
+                <input type="time" id="start_time" name="start_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_time">End Time</label>
+                <input type="time" id="end_time" name="end_time" required>
+            </div>
+
+            <button type="submit" class="btn">Add Slot</button>
+        </form>
+
+        <a href="{% url 'doctor_dashboard' %}" class="back">Back to Dashboard</a>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Slot | Hospital Appointment System</title>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef4ff, #f8fbff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--text);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 32px;
+            box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .doctor-info {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 22px;
+            color: var(--muted);
+        }
+
+        .doctor-info strong {
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #f8fafc;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .message {
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #bbf7d0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Add Available Slot</h1>
+
+        <p class="subtitle">
+            Add your consultation date and time. Patients will see and book only available slots.
+        </p>
+
+        <div class="doctor-info">
+            <p><strong>Doctor:</strong> {{ doctor.doctor_name }}</p>
+            <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+            <p><strong>Hospital:</strong> {{ doctor.hospital.hospital_name }}</p>
+        </div>
+
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="date">Appointment Date</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="start_time">Start Time</label>
+                <input type="time" id="start_time" name="start_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_time">End Time</label>
+                <input type="time" id="end_time" name="end_time" required>
+            </div>
+
+            <button type="submit" class="btn">Add Slot</button>
+        </form>
+
+        <a href="{% url 'doctor_dashboard' %}" class="back">Back to Doctor Dashboard</a>
+    </div>
+</body>
+</html>

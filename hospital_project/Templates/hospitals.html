@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Hospital | Hospital Appointment System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .topbar a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .search-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            min-width: 240px;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        button {
+            border: none;
+            background: var(--primary);
+            color: white;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .hospital-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .hospital-card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+        }
+
+        .hospital-card p {
+            margin: 8px 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .select-btn {
+            display: inline-block;
+            margin-top: 14px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .select-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .empty {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h2>Select Hospital</h2>
+            <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+        </div>
+
+        <div class="search-card">
+            <form method="GET">
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Search hospital by name or city"
+                    aria-label="Search hospital by name or city"
+                >
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="grid">
+            {% for hospital in hospitals %}
+                <div class="hospital-card">
+                    <h3>{{ hospital.hospital_name }}</h3>
+                    <p><strong>City:</strong> {{ hospital.city }}, {{ hospital.state }}</p>
+                    <p><strong>Location:</strong> {{ hospital.location }}</p>
+                    <p>{{ hospital.address }}</p>
+
+                    <a href="{% url 'doctor_list' hospital.id %}" class="select-btn">
+                        View Doctors
+                    </a>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    No hospitals found. Please try another search.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

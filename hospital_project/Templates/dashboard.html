@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Hospital Appointments System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .logout-link {
+            text-decoration: none;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .card p {
+            color: var(--muted);
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        .action-btn {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            padding: 13px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h2>Welcome, {{ request.user.username }}</h2>
+            <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+
+        <div class="card">
+            <p>
+                You are logged in successfully. From here, you will be able to search hospitals,
+                select doctors, choose available slots, and book appointments.
+            </p>
+
+            <a href="{% url 'hospital_list' %}" class="action-btn">Book Appointment</a>
+        </div>
+    </div>
+</body>
+</html>

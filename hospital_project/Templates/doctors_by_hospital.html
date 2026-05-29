@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctors</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Doctors</p>
+
+        <a href="/patient-dashboard/">Patient Dashboard</a>
+        <a href="/hospitals/">Hospitals</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>{{ hospital.name }}</h1>
+                <p>{{ hospital.city }} | {{ hospital.address }}</p>
+            </div>
+        </div>
+
+        <section class="section-card">
+            <h2>Doctors Available</h2>
+
+            {% if doctors %}
+                <table>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Qualification</th>
+                        <th>Experience</th>
+                        <th>Fees</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor }}</td>
+                        <td>{{ doctor.specialization }}</td>
+                        <td>{{ doctor.qualification }}</td>
+                        <td>{{ doctor.experience }} years</td>
+                        <td>₹{{ doctor.consultation_fees }}</td>
+                        <td>
+                            <a href="{% url 'doctor_slots' doctor.id %}" class="btn">
+                                View Slots
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No doctors assigned to this hospital yet.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

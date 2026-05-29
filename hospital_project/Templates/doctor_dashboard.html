@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | Hospital Appointment System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+            --success: #047857;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 26px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .logout {
+            text-decoration: none;
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #ffffff, #f8fbff);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 26px;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .profile-card h2 {
+            margin: 0 0 10px;
+        }
+
+        .profile-card p {
+            color: var(--muted);
+            margin: 6px 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 14px;
+            margin: 22px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            margin-top: 22px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .section h3 {
+            margin: 0 0 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th {
+            background: #f8fafc;
+        }
+
+        td {
+            color: var(--muted);
+        }
+
+        .empty {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 760px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h1>Doctor Dashboard</h1>
+            <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+
+        <div class="profile-card">
+            <h2>{{ doctor.doctor_name }}</h2>
+            <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+            <p><strong>Hospital:</strong> {{ doctor.hospital.hospital_name }}</p>
+            <p><strong>Qualification:</strong> {{ doctor.qualification }}</p>
+            <p><strong>Experience:</strong> {{ doctor.experience }} years</p>
+            <p><strong>Fee:</strong> ₹{{ doctor.consultation_fee }}</p>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'add_slot' %}" class="btn btn-primary">Add Available Slot</a>
+            <a href="{% url 'doctor_appointments' %}" class="btn btn-secondary">View All Appointments</a>
+        </div>
+
+        <div class="section">
+            <h3>Recent Slots</h3>
+
+            {% if slots %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in slots %}
+                            <tr>
+                                <td>{{ slot.date }}</td>
+                                <td>{{ slot.start_time }}</td>
+                                <td>{{ slot.end_time }}</td>
+                                <td>{% if slot.is_booked %}Booked{% else %}Available{% endif %}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">No slots added yet. Add your first available slot.</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h3>Recent Appointments</h3>
+
+            {% if appointments %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.patient.username }}</td>
+                                <td>{{ appointment.appointment_date }}</td>
+                                <td>{{ appointment.slot.start_time }} - {{ appointment.slot.end_time }}</td>
+                                <td>{{ appointment.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">No appointments booked yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

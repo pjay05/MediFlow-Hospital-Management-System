@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Hospital</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Select Hospital</p>
+
+        <a href="/patient-dashboard/">Patient Dashboard</a>
+        <a href="/hospitals/">Hospitals</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Choose a Hospital</h1>
+                <p>Select a hospital to view doctors and book appointments.</p>
+            </div>
+        </div>
+
+        <section class="section-card">
+            <h2>Available Hospitals</h2>
+
+            {% if hospitals %}
+                <table>
+                    <tr>
+                        <th>Hospital</th>
+                        <th>City</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for hospital in hospitals %}
+                    <tr>
+                        <td>{{ hospital.name }}</td>
+                        <td>{{ hospital.city }}</td>
+                        <td>{{ hospital.address }}</td>
+                        <td>{{ hospital.phone }}</td>
+                        <td>
+                            <a href="{% url 'doctors_by_hospital' hospital.id %}" class="btn">
+                                View Doctors
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No hospitals added yet.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

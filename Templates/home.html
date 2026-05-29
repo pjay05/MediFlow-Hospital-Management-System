@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediFlow | Hospital Appointment System</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">MediFlow</div>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#careers">Careers</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-content">
+
+        <span class="badge">Smart Hospital Appointment System</span>
+
+        <h1>Book Appointments With Trusted Doctors Easily.</h1>
+
+        <p>
+            MediFlow helps patients choose hospitals, select doctors, book available slots,
+            and manage appointment records in one simple healthcare platform.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/signup/" class="btn primary-btn">Get Started</a>
+            <a href="/login/" class="btn secondary-btn">Login</a>
+        </div>
+
+        <p class="registered-text">
+            Already registered?
+            <a href="/login/">Login here</a>
+        </p>
+
+    </div>
+</section>
+
+<section class="section" id="about">
+    <div class="section-heading">
+        <h2>About Us</h2>
+        <p>
+            MediFlow is a hospital appointment management system designed to connect
+            patients, doctors, and hospital teams through a smooth digital workflow.
+        </p>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h3>For Patients</h3>
+            <p>Sign up, choose hospitals, book doctor appointments, and track your medical history.</p>
+        </div>
+
+        <div class="card">
+            <h3>For Doctors</h3>
+            <p>View appointments, patient details, and medical history from one dashboard.</p>
+        </div>
+
+        <div class="card">
+            <h3>For Hospitals</h3>
+            <p>Manage doctors, slots, patients, and appointments in an organized system.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section light-section">
+    <div class="section-heading">
+        <h2>How It Works</h2>
+        <p>A simple booking flow for patients.</p>
+    </div>
+
+    <div class="steps">
+        <div class="step">
+            <span>1</span>
+            <h3>Create Account</h3>
+            <p>Patients sign up and add basic medical details.</p>
+        </div>
+
+        <div class="step">
+            <span>2</span>
+            <h3>Choose Doctor</h3>
+            <p>Select hospital, doctor, specialization, and appointment slot.</p>
+        </div>
+
+        <div class="step">
+            <span>3</span>
+            <h3>Book Appointment</h3>
+            <p>Confirm booking and view appointment history anytime.</p>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="careers">
+    <div class="section-heading">
+        <h2>Careers</h2>
+        <p>
+            We are building a smarter healthcare experience. Future opportunities may include
+            roles in hospital operations, digital health support, software development, and healthcare data management.
+        </p>
+    </div>
+
+    <div class="career-box">
+        <h3>Want to be part of MediFlow?</h3>
+        <p>Career openings will be added soon. Stay connected as the platform grows.</p>
+    </div>
+</section>
+
+<section class="cta">
+    <h2>Ready to book your appointment?</h2>
+    <p>Create your patient account and start booking doctors today.</p>
+
+    <div class="hero-buttons">
+        <a href="/signup/" class="btn primary-btn">Sign Up</a>
+        <a href="/login/" class="btn secondary-btn">Login</a>
+    </div>
+</section>
+
+</body>
+</html>

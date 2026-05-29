@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Slot | Hospital Appointment System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+            --success-bg: #ecfdf5;
+            --success: #047857;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .topbar h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .topbar a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .doctor-summary {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .doctor-summary h3 {
+            margin: 0 0 8px;
+        }
+
+        .doctor-summary p {
+            margin: 6px 0;
+            color: var(--muted);
+        }
+
+        .slot-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .slot-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .slot-badge {
+            display: inline-block;
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .slot-card p {
+            margin: 8px 0;
+            color: var(--muted);
+        }
+
+        .book-btn {
+            display: inline-block;
+            margin-top: 14px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .book-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .empty {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="topbar">
+            <h2>Available Slots</h2>
+            <a href="{% url 'doctor_list' doctor.hospital.id %}">Back to Doctors</a>
+        </div>
+
+        <div class="doctor-summary">
+            <h3>{{ doctor.doctor_name }}</h3>
+            <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+            <p><strong>Hospital:</strong> {{ doctor.hospital.hospital_name }}</p>
+        </div>
+
+        <div class="slot-list">
+            {% for slot in slots %}
+                <div class="slot-card">
+                    <span class="slot-badge">Available</span>
+                    <p><strong>Date:</strong> {{ slot.date }}</p>
+                    <p><strong>Time:</strong> {{ slot.start_time }} - {{ slot.end_time }}</p>
+
+                    <a href="{% url 'book_appointment' slot.id %}" class="book-btn">
+                        Book This Slot
+                    </a>
+                </div>
+            {% empty %}
+                <div class="empty">
+                    No available slots for this doctor.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

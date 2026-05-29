@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment Confirmation</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Confirmation</p>
+
+        <a href="/patient-dashboard/">Patient Dashboard</a>
+        <a href="/hospitals/">Book Another</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Appointment Confirmed</h1>
+                <p>Your appointment has been successfully booked.</p>
+            </div>
+        </div>
+
+        <section class="section-card">
+            <h2>Booking Details</h2>
+
+            <table>
+                <tr>
+                    <th>Detail</th>
+                    <th>Information</th>
+                </tr>
+
+                <tr>
+                    <td>Patient</td>
+                    <td>{{ appointment.patient }}</td>
+                </tr>
+
+                <tr>
+                    <td>Hospital</td>
+                    <td>{{ appointment.doctor.hospital.name|default:"Not assigned" }}</td>
+                </tr>
+
+                <tr>
+                    <td>Doctor</td>
+                    <td>{{ appointment.doctor }}</td>
+                </tr>
+
+                <tr>
+                    <td>Specialization</td>
+                    <td>{{ appointment.doctor.specialization }}</td>
+                </tr>
+
+                <tr>
+                    <td>Date</td>
+                    <td>{{ appointment.appointment_date }}</td>
+                </tr>
+
+                <tr>
+                    <td>Time</td>
+                    <td>{{ appointment.appointment_time }}</td>
+                </tr>
+
+                <tr>
+                    <td>Fees</td>
+                    <td>₹{{ appointment.fees }}</td>
+                </tr>
+
+                <tr>
+                    <td>Status</td>
+                    <td>{{ appointment.status }}</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="section-card">
+            <a href="/patient-dashboard/" class="btn">Back to Patient Dashboard</a>
+            <a href="/hospitals/" class="btn">Book Another Appointment</a>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

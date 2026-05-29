@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediFlow Login</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="brand">
+            <h1>MediFlow</h1>
+            <p>Hospital Appointment Management System</p>
+        </div>
+
+        <h2>Login to your dashboard</h2>
+
+        {% if messages %}
+    {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <div class="quick-links">
+            <a href="/">Back to Home</a>
+            <a href="/signup/">Patient Signup</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

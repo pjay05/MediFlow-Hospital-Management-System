@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Admin Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Custom Hospital Admin</p>
+
+        <a href="/">Home</a>
+        <a href="/custom-admin/">Dashboard</a>
+        <a href="/admin/">Django Admin</a>
+        <a href="/admin/accounts/doctorprofile/">Doctors</a>
+        <a href="/admin/accounts/patientprofile/">Patients</a>
+        <a href="/admin/appointments/doctorslot/">Doctor Slots</a>
+        <a href="/admin/appointments/appointment/">Appointments</a>
+        <a href="/admin/appointments/medicalhistory/">Medical History</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Hospital Management Dashboard</h1>
+                <p>Welcome, {{ request.user.username }}. Monitor doctors, patients, slots, and bookings.</p>
+            </div>
+
+            <div class="admin-actions">
+                <a href="/admin/">Open Django Admin</a>
+            </div>
+        </div>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span>Total Doctors</span>
+                <h2>{{ total_doctors }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Total Patients</span>
+                <h2>{{ total_patients }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Total Slots</span>
+                <h2>{{ total_slots }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Total Appointments</span>
+                <h2>{{ total_appointments }}</h2>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Recent Doctor Slots</h2>
+
+            {% if recent_slots %}
+                <table>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Date</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Booked</th>
+                    </tr>
+
+                    {% for slot in recent_slots %}
+                    <tr>
+                        <td>{{ slot.doctor }}</td>
+                        <td>{{ slot.doctor.specialization }}</td>
+                        <td>{{ slot.date }}</td>
+                        <td>{{ slot.start_time }}</td>
+                        <td>{{ slot.end_time }}</td>
+                        <td>
+                            {% if slot.is_booked %}
+                                <span class="status-yes">Yes</span>
+                            {% else %}
+                                <span class="status-no">No</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No doctor slots found yet.</p>
+            {% endif %}
+        </section>
+
+        <section class="section-card">
+            <h2>Recent Appointments</h2>
+
+            {% if recent_appointments %}
+                <table>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Fees</th>
+                        <th>Status</th>
+                    </tr>
+
+                    {% for appointment in recent_appointments %}
+                    <tr>
+                        <td>{{ appointment.patient }}</td>
+                        <td>{{ appointment.doctor }}</td>
+                        <td>{{ appointment.appointment_date }}</td>
+                        <td>{{ appointment.appointment_time }}</td>
+                        <td>₹{{ appointment.fees }}</td>
+                        <td>{{ appointment.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No appointments found yet.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient EHR</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Patient EHR</p>
+
+        <a href="/doctor-dashboard/">Doctor Dashboard</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Electronic Health Record</h1>
+                <p>Medical record of {{ patient.user.username }}.</p>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="section-card">
+            <h2>Patient Details</h2>
+
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Blood Group</th>
+                </tr>
+
+                <tr>
+                    <td>{{ patient.user.username }}</td>
+                    <td>{{ patient.phone|default:"Not added" }}</td>
+                    <td>{{ patient.age|default:"Not added" }}</td>
+                    <td>{{ patient.gender|default:"Not added" }}</td>
+                    <td>{{ patient.blood_group|default:"Not added" }}</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="section-card">
+            <h2>Edit Electronic Health Record</h2>
+            <p class="empty-text">
+                Update patient medical history, diagnosis, lab summary, prescription notes, and doctor observations.
+            </p>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="ehr-grid">
+
+                    <div class="ehr-field">
+                        <label>Disease History</label>
+                        <textarea name="disease_history">{{ medical_history.disease_history|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Allergies</label>
+                        <textarea name="allergies">{{ medical_history.allergies|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Current Medications</label>
+                        <textarea name="current_medications">{{ medical_history.current_medications|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Previous Surgeries</label>
+                        <textarea name="previous_surgeries">{{ medical_history.previous_surgeries|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Diagnosis</label>
+                        <textarea name="diagnosis">{{ medical_history.diagnosis|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Lab Result Summary</label>
+                        <textarea name="lab_result_summary">{{ medical_history.lab_result_summary|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Prescription Summary</label>
+                        <textarea name="prescription_summary">{{ medical_history.prescription_summary|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field">
+                        <label>Doctor Notes</label>
+                        <textarea name="doctor_notes">{{ medical_history.doctor_notes|default:"" }}</textarea>
+                    </div>
+
+                    <div class="ehr-field full-width">
+                        <label>General Notes</label>
+                        <textarea name="notes">{{ medical_history.notes|default:"" }}</textarea>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="availability-btn">
+                    Save EHR
+                </button>
+            </form>
+        </section>
+                 <section class="section-card">
+    <h2>Create Prescription</h2>
+    <p class="empty-text">Add medicine details for this patient.</p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="ehr-grid">
+
+            <div class="ehr-field">
+                <label>Medicine Name</label>
+                <input type="text" name="medicine_name" placeholder="Example: Amlodipine">
+            </div>
+
+            <div class="ehr-field">
+                <label>Dosage</label>
+                <input type="text" name="dosage" placeholder="Example: 5 mg">
+            </div>
+
+            <div class="ehr-field">
+                <label>Frequency</label>
+                <input type="text" name="frequency" placeholder="Example: Once daily">
+            </div>
+
+            <div class="ehr-field">
+                <label>Duration</label>
+                <input type="text" name="duration" placeholder="Example: 15 days">
+            </div>
+
+            <div class="ehr-field full-width">
+                <label>Instructions</label>
+                <textarea name="prescription_instructions" placeholder="Example: Take after breakfast."></textarea>
+            </div>
+
+        </div>
+
+        <button type="submit" class="availability-btn">
+            Save Prescription
+        </button>
+    </form>
+</section>
+
+<section class="section-card">
+    <h2>Prescription History</h2>
+
+    {% if prescriptions %}
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Frequency</th>
+                <th>Duration</th>
+                <th>Instructions</th>
+                <th>PDF</th>
+            </tr>
+
+            {% for prescription in prescriptions %}
+            <tr>
+                <td>{{ prescription.created_at }}</td>
+                <td>{{ prescription.doctor }}</td>
+                <td>{{ prescription.medicine_name }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.frequency }}</td>
+                <td>{{ prescription.duration }}</td>
+                <td>{{ prescription.instructions|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'prescription_pdf' prescription.id %}" class="btn">
+                        Download PDF
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No prescriptions added yet.</p>
+    {% endif %}
+</section>
+        <section class="section-card">
+            <h2>Appointment History</h2>
+
+            {% if appointments %}
+                <table>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Fees</th>
+                        <th>Status</th>
+                    </tr>
+
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.doctor }}</td>
+                        <td>{{ appointment.appointment_date }}</td>
+                        <td>{{ appointment.appointment_time }}</td>
+                        <td>₹{{ appointment.fees }}</td>
+                        <td>{{ appointment.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No appointment history available.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

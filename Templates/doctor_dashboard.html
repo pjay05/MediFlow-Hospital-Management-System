@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Doctor Dashboard</p>
+
+        <a href="/doctor-dashboard/">Dashboard</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Doctor Dashboard</h1>
+                <p>Welcome, Dr. {{ request.user.username }}. Manage your slots and appointments.</p>
+            </div>
+        </div>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span>Specialization</span>
+                <h2 style="font-size: 24px;">{{ doctor.specialization }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Experience</span>
+                <h2>{{ doctor.experience }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Fees</span>
+                <h2>₹{{ doctor.consultation_fees }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Total Slots</span>
+                <h2>{{ slots|length }}</h2>
+            </div>
+        </section>
+
+        <section class="section-card">
+            <h2>Your Profile</h2>
+
+            <table>
+                <tr>
+                    <th>Phone</th>
+                    <th>Qualification</th>
+                    <th>Specialization</th>
+                    <th>Experience</th>
+                    <th>Fees</th>
+                </tr>
+
+                <tr>
+                    <td>{{ doctor.phone }}</td>
+                    <td>{{ doctor.qualification }}</td>
+                    <td>{{ doctor.specialization }}</td>
+                    <td>{{ doctor.experience }} years</td>
+                    <td>₹{{ doctor.consultation_fees }}</td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="section-card">
+    <h2>Add New Appointment Slot</h2>
+    <p class="empty-text">Create your available appointment timing for patients.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'add_doctor_slot' %}">
+        {% csrf_token %}
+
+        <div class="availability-wrapper">
+
+            <div class="availability-field">
+                <label>Date</label>
+                <input type="date" name="date" required>
+            </div>
+
+            <div class="availability-field">
+                <label>Start Time</label>
+                <input type="time" name="start_time" required>
+            </div>
+
+            <div class="availability-field">
+                <label>End Time</label>
+                <input type="time" name="end_time" required>
+            </div>
+
+        </div>
+
+        <button type="submit" class="availability-btn">
+            Add Slot
+        </button>
+    </form>
+</section>
+
+        <section class="section-card">
+            <h2>Booked Appointments</h2>
+
+            {% if appointments %}
+                <table>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Fees</th>
+                        <th>Status</th>
+                        <th>Patient History</th>
+                    </tr>
+
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.patient }}</td>
+                        <td>{{ appointment.appointment_date }}</td>
+                        <td>{{ appointment.appointment_time }}</td>
+                        <td>₹{{ appointment.fees }}</td>
+                        <td>
+                            {% if appointment.status == "Cancelled" %}
+                                <span class="cancelled-text">Cancelled</span>
+                            {% else %}
+                                <span class="confirmed-text">{{ appointment.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                          {% if appointment.patient.medicalhistory %}
+                          Disease: {{ appointment.patient.medicalhistory.disease_history|default:"Not added" }} <br>
+                          Allergies: {{ appointment.patient.medicalhistory.allergies|default:"Not added" }} <br><br>
+                          {% else %}
+                          Not added yet <br><br>
+                        {% endif %}
+
+                        <a href="{% url 'patient_history_detail' appointment.patient.id %}" class="btn">
+                          View History
+                     </a>
+                </td>
+
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No booked appointments yet.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

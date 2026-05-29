@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Slots</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>MediFlow</h2>
+        <p>Doctor Slots</p>
+
+        <a href="/patient-dashboard/">Patient Dashboard</a>
+        <a href="/hospitals/">Hospitals</a>
+        <a href="/logout/">Logout</a>
+    </aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>{{ doctor }}</h1>
+                <p>
+                    {{ doctor.hospital.name }} |
+                    {{ doctor.specialization }} |
+                    {{ doctor.qualification }} |
+                    {{ doctor.experience }} years |
+                    ₹{{ doctor.consultation_fees }}
+                </p>
+            </div>
+        </div>
+
+        <section class="section-card">
+            <h2>Available Appointment Slots</h2>
+
+            {% if available_slots %}
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Fees</th>
+                        <th>Action</th>
+                    </tr>
+
+                    {% for slot in available_slots %}
+                    <tr>
+                        <td>{{ slot.date }}</td>
+                        <td>{{ slot.start_time }}</td>
+                        <td>{{ slot.end_time }}</td>
+                        <td>₹{{ doctor.consultation_fees }}</td>
+                        <td>
+                            <a href="{% url 'book_slot' slot.id %}" class="btn">
+                                Book Appointment
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No available slots for this doctor right now.</p>
+            {% endif %}
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

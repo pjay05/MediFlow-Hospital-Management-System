@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Confirmed | Hospital Appointment System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f4f7fb;
+            --card: #ffffff;
+            --border: #dbe3ef;
+            --success: #047857;
+            --success-bg: #ecfdf5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef4ff, #f8fbff);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 620px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 34px;
+            box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        .success-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 28px;
+        }
+
+        .subtext {
+            color: var(--muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .details {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            background: #f8fafc;
+            padding: 13px 14px;
+            font-weight: 600;
+        }
+
+        .value {
+            padding: 13px 14px;
+            color: var(--muted);
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: var(--primary);
+            color: white;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        @media (max-width: 560px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .label {
+                border-bottom: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="success-icon">✓</div>
+
+        <h2>Appointment Confirmed</h2>
+        <p class="subtext">
+            Your appointment has been booked successfully. The confirmation details are shown below.
+        </p>
+
+        <div class="details">
+            <div class="row">
+                <div class="label">Patient</div>
+                <div class="value">{{ appointment.patient.username }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Hospital</div>
+                <div class="value">{{ appointment.hospital.hospital_name }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Doctor</div>
+                <div class="value">{{ appointment.doctor.doctor_name }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Specialization</div>
+                <div class="value">{{ appointment.doctor.specialization }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Date</div>
+                <div class="value">{{ appointment.appointment_date }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Time</div>
+                <div class="value">{{ appointment.slot.start_time }} - {{ appointment.slot.end_time }}</div>
+            </div>
+
+            <div class="row">
+                <div class="label">Status</div>
+                <div class="value">{{ appointment.status }}</div>
+            </div>
+        </div>
+
+        <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+    </div>
+</body>
+</html>

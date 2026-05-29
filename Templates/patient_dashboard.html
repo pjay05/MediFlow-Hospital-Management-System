@@ -1,0 +1,564 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+<div class="admin-layout">
+
+<aside class="sidebar">
+    <h2>MediFlow</h2>
+    <p>Patient Dashboard</p>
+
+    <a href="/patient-dashboard/">Dashboard</a>
+    <a href="/hospitals/">Book Appointment</a>
+    <a href="/">Home</a>
+    <a href="/logout/">Logout</a>
+</aside>
+
+    <main class="main-content">
+
+        <div class="topbar">
+            <div>
+                <h1>Patient Dashboard</h1>
+                <p>Welcome, {{ request.user.username }}. View available doctors and your appointments.</p>
+            </div>
+        </div>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <span>Age</span>
+                <h2>{{ patient.age }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Gender</span>
+                <h2 style="font-size: 24px;">{{ patient.gender }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Blood Group</span>
+                <h2>{{ patient.blood_group }}</h2>
+            </div>
+
+            <div class="stat-card">
+                <span>Total Appointments</span>
+                <h2>{{ appointments|length }}</h2>
+            </div>
+        </section>
+
+        <section class="section-card">
+    <h2>Find Doctor Availability</h2>
+    <p class="empty-text">Select specialization, doctor, and available timing to book an appointment.</p>
+
+    {% if available_slots %}
+        <div class="availability-grid">
+
+            <div class="form-group">
+                <label>Specialization</label>
+                <select id="specializationSelect">
+                    <option value="">-- Select specialization --</option>
+
+                    {% for slot in available_slots %}
+                        <option value="{{ slot.doctor.specialization }}">
+                            {{ slot.doctor.specialization }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Doctor</label>
+                <select id="doctorSelect">
+                    <option value="">-- Select doctor --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Available Timing</label>
+                <select id="timeSelect">
+                    <option value="">-- Select timing --</option>
+                </select>
+            </div>
+
+        </div>
+
+        <button type="button" class="btn" id="bookSelectedSlotBtn">
+            Book Selected Slot
+        </button>
+    {% else %}
+        <p class="empty-text">No available doctor slots right now.</p>
+    {% endif %}
+</section>
+<section class="section-card">
+    <h2>Medical Document Vault</h2>
+    <p class="empty-text">Upload your past reports, prescriptions, discharge summaries, or scans.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'upload_medical_document' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="ehr-grid">
+
+            <div class="ehr-field">
+                <label>Document Title</label>
+                <input type="text" name="title" placeholder="Example: CBC Report May 2026" required>
+            </div>
+
+            <div class="ehr-field">
+                <label>Document Type</label>
+                <select name="document_type" required>
+                    <option value="">Select document type</option>
+                    <option value="Lab Report">Lab Report</option>
+                    <option value="Prescription">Prescription</option>
+                    <option value="Discharge Summary">Discharge Summary</option>
+                    <option value="X-Ray">X-Ray</option>
+                    <option value="MRI">MRI</option>
+                    <option value="CT Scan">CT Scan</option>
+                    <option value="Blood Test">Blood Test</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="ehr-field">
+                <label>Upload File</label>
+                <input type="file" name="file" required>
+            </div>
+
+            <div class="ehr-field full-width">
+                <label>Description</label>
+                <textarea name="description" placeholder="Short note about this document"></textarea>
+            </div>
+
+        </div>
+
+        <button type="submit" class="availability-btn">
+            Upload Document
+        </button>
+    </form>
+</section>
+
+<section class="section-card">
+    <h2>Your Uploaded Documents</h2>
+
+    {% if documents %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Uploaded At</th>
+                <th>File</th>
+            </tr>
+
+            {% for document in documents %}
+            <tr>
+                <td>{{ document.title }}</td>
+                <td>{{ document.document_type }}</td>
+                <td>{{ document.description|default:"-" }}</td>
+                <td>{{ document.uploaded_at }}</td>
+                <td>
+                    <a href="{{ document.file.url }}" class="btn" target="_blank">
+                        View / Download
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No medical documents uploaded yet.</p>
+    {% endif %}
+</section>
+
+<section class="section-card">
+    <h2>Available Doctor Slots</h2>
+
+    {% if available_slots %}
+        <table>
+            <tr>
+                <th>Doctor</th>
+                <th>Specialization</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Fees</th>
+                <th>Action</th>
+            </tr>
+
+            {% for slot in available_slots %}
+            <tr>
+                <td>{{ slot.doctor }}</td>
+                <td>{{ slot.doctor.specialization }}</td>
+                <td>{{ slot.date }}</td>
+                <td>{{ slot.start_time }}</td>
+                <td>{{ slot.end_time }}</td>
+                <td>₹{{ slot.doctor.consultation_fees }}</td>
+                <td>
+                    <a href="{% url 'book_slot' slot.id %}">Book</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No available doctor slots right now.</p>
+    {% endif %}
+</section>
+
+
+<script>
+    const slots = [
+    {% for slot in available_slots %}
+        {
+            specialization: "{{ slot.doctor.specialization|escapejs }}",
+            doctorId: "{{ slot.doctor.id }}",
+            doctorName: "{{ slot.doctor|escapejs }}",
+            date: "{{ slot.date }}",
+            start: "{{ slot.start_time }}",
+            end: "{{ slot.end_time }}",
+            fees: "{{ slot.doctor.consultation_fees }}",
+            bookUrl: "{% url 'book_slot' slot.id %}"
+        },
+    {% endfor %}
+];
+
+    const specializationSelect = document.getElementById("specializationSelect");
+    const doctorSelect = document.getElementById("doctorSelect");
+    const timeSelect = document.getElementById("timeSelect");
+    const bookBtn = document.getElementById("bookSelectedSlotBtn");
+
+    function removeDuplicateOptions(selectElement) {
+        const seen = new Set();
+
+        Array.from(selectElement.options).forEach(option => {
+            if (option.value && seen.has(option.value)) {
+                option.remove();
+            } else {
+                seen.add(option.value);
+            }
+        });
+    }
+
+    if (specializationSelect) {
+        removeDuplicateOptions(specializationSelect);
+
+        specializationSelect.addEventListener("change", function () {
+            const selectedSpecialization = this.value;
+
+            doctorSelect.innerHTML = '<option value="">-- Select doctor --</option>';
+            timeSelect.innerHTML = '<option value="">-- Select timing --</option>';
+
+            const doctors = slots.filter(slot => slot.specialization === selectedSpecialization);
+
+            const addedDoctors = new Set();
+
+            doctors.forEach(slot => {
+                if (!addedDoctors.has(slot.doctorId)) {
+                    const option = document.createElement("option");
+                    option.value = slot.doctorId;
+                    option.textContent = slot.doctorName;
+                    doctorSelect.appendChild(option);
+                    addedDoctors.add(slot.doctorId);
+                }
+            });
+        });
+
+        doctorSelect.addEventListener("change", function () {
+            const selectedSpecialization = specializationSelect.value;
+            const selectedDoctor = this.value;
+
+            timeSelect.innerHTML = '<option value="">-- Select timing --</option>';
+
+            const timings = slots.filter(slot =>
+                slot.specialization === selectedSpecialization &&
+                slot.doctorId === selectedDoctor
+            );
+
+            timings.forEach(slot => {
+                const option = document.createElement("option");
+                option.value = slot.bookUrl;
+                option.textContent = `${slot.date} | ${slot.start} - ${slot.end} | ₹${slot.fees}`;
+                timeSelect.appendChild(option);
+            });
+        });
+
+        bookBtn.addEventListener("click", function () {
+            if (timeSelect.value) {
+                window.location.href = timeSelect.value;
+            } else {
+                alert("Please select specialization, doctor, and timing first.");
+            }
+        });
+    }
+</script>
+
+        <section class="section-card">
+            <h2>Upcoming Appointments</h2>
+
+            {% if appointments %}
+                <table>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Fees</th>
+                        <th>Status</th>
+                        <th>Patient History</th>
+                        <th>Next Slot</th>
+                    </tr>
+
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.doctor }}</td>
+                        <td>{{ appointment.appointment_date }}</td>
+                        <td>{{ appointment.appointment_time }}</td>
+                        <td>₹{{ appointment.fees }}</td>
+                        <td>{{ appointment.status }}</td>
+                        <td>
+                            {% if medical_history.disease_history or medical_history.allergies or medical_history.current_medications %}
+                                Disease: {{ medical_history.disease_history|default:"Not added" }} <br>
+                                Allergies: {{ medical_history.allergies|default:"Not added" }} <br>
+                                Medicines: {{ medical_history.current_medications|default:"Not added" }}
+                            {% else %}
+                                Not added yet
+                            {% endif %}
+                        </td>
+                        <td>
+    {% if appointment.status == "Cancelled" %}
+        <div class="next-slot-box">
+            <select class="next-slot-select">
+                <option value="">Choose next slot</option>
+
+                {% for slot in available_slots %}
+                    {% if slot.doctor.id == appointment.doctor.id %}
+                        <option value="{% url 'book_slot' slot.id %}">
+                            {{ slot.date }} | {{ slot.start_time }} - {{ slot.end_time }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+
+            <button type="button" class="small-book-btn" onclick="bookNextSlot(this)">
+                Book
+            </button>
+        </div>
+    {% else %}
+        <span class="confirmed-text">Active</span>
+    {% endif %}
+</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-text">No appointment booked yet.</p>
+            {% endif %}
+        </section>
+                <section class="section-card">
+    <h2>Medical Document Vault</h2>
+    <p class="empty-text">Upload your past reports, prescriptions, discharge summaries, or scans.</p>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" action="{% url 'upload_medical_document' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="ehr-grid">
+
+            <div class="ehr-field">
+                <label>Document Title</label>
+                <input type="text" name="title" placeholder="Example: CBC Report May 2026" required>
+            </div>
+
+            <div class="ehr-field">
+                <label>Document Type</label>
+                <select name="document_type" required>
+                    <option value="">Select document type</option>
+                    <option value="Lab Report">Lab Report</option>
+                    <option value="Prescription">Prescription</option>
+                    <option value="Discharge Summary">Discharge Summary</option>
+                    <option value="X-Ray">X-Ray</option>
+                    <option value="MRI">MRI</option>
+                    <option value="CT Scan">CT Scan</option>
+                    <option value="Blood Test">Blood Test</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="ehr-field">
+                <label>Upload File</label>
+                <input type="file" name="file" required>
+            </div>
+
+            <div class="ehr-field full-width">
+                <label>Description</label>
+                <textarea name="description" placeholder="Short note about this document"></textarea>
+            </div>
+
+        </div>
+
+        <button type="submit" class="availability-btn">
+            Upload Document
+        </button>
+    </form>
+</section>
+
+<section class="section-card">
+    <h2>Your Uploaded Documents</h2>
+
+    {% if documents %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Uploaded At</th>
+                <th>File</th>
+            </tr>
+
+            {% for document in documents %}
+            <tr>
+                <td>{{ document.title }}</td>
+                <td>{{ document.document_type }}</td>
+                <td>{{ document.description|default:"-" }}</td>
+                <td>{{ document.uploaded_at }}</td>
+                <td>
+                    <a href="{{ document.file.url }}" class="btn" target="_blank">
+                        View / Download
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No medical documents uploaded yet.</p>
+    {% endif %}
+</section>
+<section class="section-card">
+    <h2>Medical Document Vault</h2>
+
+    {% if documents %}
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Uploaded At</th>
+                <th>File</th>
+            </tr>
+
+            {% for document in documents %}
+            <tr>
+                <td>{{ document.title }}</td>
+                <td>{{ document.document_type }}</td>
+                <td>{{ document.description|default:"-" }}</td>
+                <td>{{ document.uploaded_at }}</td>
+                <td>
+                    <a href="{{ document.file.url }}" class="btn" target="_blank">
+                        View / Download
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No documents uploaded by this patient yet.</p>
+    {% endif %}
+</section>
+        <section class="section-card">
+            <h2>Past Appointments</h2>
+
+
+    {% if past_appointments %}
+        <table>
+            <tr>
+                <th>Doctor</th>
+                <th>Hospital</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Fees</th>
+                <th>Status</th>
+                <th>Next Slot</th>
+            </tr>
+
+            {% for appointment in past_appointments %}
+            <tr>
+    <td>{{ appointment.doctor }}</td>
+    <td>{{ appointment.doctor.hospital.name|default:"Not assigned" }}</td>
+    <td>{{ appointment.appointment_date }}</td>
+    <td>{{ appointment.appointment_time }}</td>
+    <td>₹{{ appointment.fees }}</td>
+
+    <td>
+        {% if appointment.status == "Cancelled" %}
+            <span class="cancelled-text">Cancelled</span>
+        {% else %}
+            {{ appointment.status }}
+        {% endif %}
+    </td>
+
+    <td>
+        {% if appointment.status == "Cancelled" %}
+            <div class="next-slot-box">
+                <select class="next-slot-select">
+                    <option value="">Choose next slot</option>
+
+                    {% for slot in available_slots %}
+                        {% if slot.doctor.id == appointment.doctor.id %}
+                            <option value="{% url 'book_slot' slot.id %}">
+                                {{ slot.date }} | {{ slot.start_time }} - {{ slot.end_time }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+
+                <button type="button" class="small-book-btn" onclick="bookNextSlot(this)">
+                    Book
+                </button>
+            </div>
+        {% else %}
+            —
+        {% endif %}
+    </td>
+</tr>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="empty-text">No past appointments yet.</p>
+    {% endif %}
+</section>
+
+    </main>
+
+</div>
+
+<script>
+    function bookNextSlot(button) {
+        const box = button.closest(".next-slot-box");
+        const select = box.querySelector(".next-slot-select");
+
+        if (select.value) {
+            window.location.href = select.value;
+        } else {
+            alert("Please choose a next available slot.");
+        }
+    }
+</script>
+</body>
+</html>
