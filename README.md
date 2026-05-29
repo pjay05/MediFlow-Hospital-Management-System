@@ -1,6 +1,6 @@
 # MediFlow Hospital Management System
 
-MediFlow is a Django-based hospital management and appointment booking system. It allows patients to sign up, book appointments, upload medical documents, and access appointment history. Doctors can add appointment slots, view booked appointments, update patient electronic health records, and generate digital prescriptions.
+MediFlow is a hospital management and appointment booking system. It allows patients to sign up, book appointments, upload medical documents, and access appointment history. Doctors can add appointment slots, view booked appointments, update patient electronic health records, and generate digital prescriptions.
 
 ## Features
 
@@ -19,7 +19,6 @@ MediFlow is a Django-based hospital management and appointment booking system. I
 ## Tech Stack
 
 - Python
-- Django
 - MySQL
 - HTML
 - CSS
