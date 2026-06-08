@@ -32,12 +32,51 @@ MediFlow is a hospital management and appointment booking system. It allows pati
 ```bash
 git clone https://github.com/Pjay05/MediFlow-Hospital-Management-System.git
 cd MediFlow-Hospital-Management-System
+```
 
 2. Create and activate virtual environment:
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
+```
+
+3. Install requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Configure your MySQL database in:
+
+```text
+hospital_project/settings.py
+```
+
+5. Run migrations:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+6. Create superuser:
+
+```bash
+python manage.py createsuperuser
+```
+
+7. Run development server:
+
+```bash
+python manage.py runserver
+```
+
+8. Open the project:
+
+```text
+http://127.0.0.1:8000/
+```
 
 ## Screenshots
 
@@ -49,6 +88,15 @@ venv\Scripts\activate
 
 ### Doctor Dashboard
 ![Doctor Dashboard](screenshots/doctor-dashboard.png)
+
+### Appointment Confirmation
+![Appointment Confirmation](screenshots/appointment-confirmation.png)
+
+### Electronic Health Record
+![EHR Page](screenshots/ehr-page.png)
+
+### Prescription PDF
+![Prescription PDF](screenshots/prescription-pdf.png)
 
 ### Appointment Confirmation
 ![Appointment Confirmation](screenshots/appointment-confirmation.png)
