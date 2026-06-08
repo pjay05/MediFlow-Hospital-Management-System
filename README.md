@@ -98,10 +98,5 @@ http://127.0.0.1:8000/
 ### Prescription PDF
 ![Prescription PDF](screenshots/prescription-pdf.png)
 
-### Appointment Confirmation
-![Appointment Confirmation](screenshots/appointment-confirmation.png)
-
-### Electronic Health Record
-![EHR Page](screenshots/ehr-page.png)
 
 
