@@ -99,21 +99,24 @@ def book_slot(request, slot_id):
     try:
         patient = PatientProfile.objects.get(user=request.user)
     except PatientProfile.DoesNotExist:
+        messages.error(request, "Only patients can book appointments.")
         return redirect("home")
 
     slot = get_object_or_404(DoctorSlot, id=slot_id)
 
-    # If slot is already booked, do not create duplicate appointment
+    # If slot is already booked, always redirect safely
+    if slot.is_booked:
+        messages.warning(request, "This slot is already booked. Please choose another slot.")
+        return redirect("patient_dashboard")
+
+    # Check if appointment already exists for this slot
     existing_appointment = Appointment.objects.filter(slot=slot).first()
 
     if existing_appointment:
-        messages.success(request, "Appointment booked successfully.")
-        return redirect("appointment_confirmation", appointment_id=existing_appointment.id)
+        messages.warning(request, "This slot is already booked. Please choose another slot.")
+        return redirect("patient_dashboard")
 
-    if slot.is_booked:
-      messages.warning(request, "This slot is already booked. Please choose another slot.")
-      return redirect("patient_dashboard")
-
+    # Create new appointment
     appointment = Appointment.objects.create(
         patient=patient,
         doctor=slot.doctor,
@@ -124,8 +127,13 @@ def book_slot(request, slot_id):
         status="Confirmed"
     )
 
+    # Mark slot as booked
     slot.is_booked = True
     slot.save()
+
+    messages.success(request, "Appointment booked successfully.")
+
+    return redirect("appointment_confirmation", appointment_id=appointment.id)
     
 @login_required
 def patient_history_detail(request, patient_id):

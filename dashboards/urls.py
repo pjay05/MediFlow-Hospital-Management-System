@@ -8,7 +8,7 @@ urlpatterns = [
     path("patient-dashboard/", views.patient_dashboard, name="patient_dashboard"),
     path("doctor-dashboard/", views.doctor_dashboard, name="doctor_dashboard"),
     path("doctor/add-slot/", views.add_doctor_slot, name="add_doctor_slot"),
-
+    path("upload-medical-document/", views.upload_medical_document, name="upload_medical_document"),
     path("hospitals/", views.hospital_list, name="hospital_list"),
     path("hospitals/<int:hospital_id>/doctors/", views.doctors_by_hospital, name="doctors_by_hospital"),
     path("doctors/<int:doctor_id>/slots/", views.doctor_slots, name="doctor_slots"),
