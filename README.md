@@ -104,6 +104,4 @@ http://127.0.0.1:8000/
 ### Electronic Health Record
 ![EHR Page](screenshots/ehr-page.png)
 
-### Prescription PDF
-![Prescription PDF](screenshots/prescription-pdf.png)
 
